@@ -1,7 +1,6 @@
 *.py~
 *.py#
 
-*.pkl
 output/*
 *.mp4
 
