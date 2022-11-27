@@ -1,13 +1,15 @@
-import ffmpeg
+from moviepy.editor import VideoFileClip, CompositeVideoClip, vfx
+bg = VideoFileClip("bg.mp4")
+flowers = VideoFileClip("flowers.mp4")
+flowers = vfx.mask_color(flowers)
 
-bg = ffmpeg.input('bg.mp4')
-flowers = ffmpeg.input('flowers.mp4')
-split = flowers.filter('colorkey', 'black').split()
+layers = [bg]
 
-(
-    ffmpeg
-    .filter([bg, split[0]], 'overlay', 0, 200)
-    .overlay(split[1])
-    .output('out.mp4', y="-y")
-    .run()
-)
+for i in range(1,5):
+  layer = flowers.resize(1/i)
+  layer.set_position((500, 500))
+  layers.append(layer)
+
+
+output = CompositeVideoClip(layers)
+output.write_videofile("out.mp4")
